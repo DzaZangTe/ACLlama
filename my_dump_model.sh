@@ -41,7 +41,7 @@ CUDA_VISIBLE_DEVICES=4 \
 python3 dump_model.py \
 --audio_model_name_or_path "/linzhihang/LLMs/whisper-v3" \
 --text_model_name_or_path "/linzhihang/LLMs/llama_3.2_3B" \
---data_path "/linzhihang/zhangyuhao/ACLlama_train_data/libri_train.json" \
+--data_path "/linzhihang/zhangyuhao/zhanchen/ACLlama_train_data/libri_train.json" \
 --fp16 True \
 --output_dir "../ACLlama_output/ACLlama_lora" \
 --num_train_epochs 20 \

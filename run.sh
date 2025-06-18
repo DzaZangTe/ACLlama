@@ -1,9 +1,9 @@
 #! /bin/bash
 
-device=(0,1,2,3)
-gpu_num=4
-# device=(0)
-# gpu_num=1
+# device=(0,1,2,3)
+# gpu_num=4
+device=(0)
+gpu_num=1
 
 
 export NCCL_P2P_DISABLE=1
@@ -19,7 +19,7 @@ output_tag="../ACLlama_output/ACLlama_lora_finetune_add_clip_contrastive_loss"
 
 export CUDA_VISIBLE_DEVICES=${device[@]}
 cmd="torchrun
-    --nproc_per_node 4
+    --nproc_per_node ${gpu_num}
     --nnodes 1
     --node_rank 0
     --master_addr localhost
@@ -27,7 +27,7 @@ cmd="torchrun
     finetune_acllama.py
     --audio_model_name_or_path "/linzhihang/LLMs/whisper-v3"
     --text_model_name_or_path "../ACLlama_output/ACLlama_lora"
-    --data_path "/linzhihang/zhangyuhao/ACLlama_train_data/libri_train.json"
+    --data_path "/linzhihang/zhangyuhao/zhanchen/ACLlama_train_data/libri_train.json"
     --output_dir ${output_tag}
     --num_train_epochs 1
     --fp16 True

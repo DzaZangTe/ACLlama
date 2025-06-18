@@ -723,8 +723,8 @@ class ACLlamaForCausalLM(LlamaForCausalLM):
             }
         )
         
-        print(kwargs.keys())
-        exit(0)
+        # print(kwargs.keys())
+        # exit(0)
         
         model_inputs.update({"audios": kwargs["audios"]} if "audios" in kwargs.keys() else {})
         
