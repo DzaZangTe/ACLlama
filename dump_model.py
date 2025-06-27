@@ -434,9 +434,9 @@ def train():
     new_head.weight.data[ : config.vocab_size] = model.lm_head.weight.data
     model.lm_head = new_head
 
-    # import copy
-    # model.audio_feature_head = copy.deepcopy(new_head)
-    # model.model.audio_feature_head = copy.deepcopy(new_head)
+    import copy
+    model.audio_feature_head = copy.deepcopy(new_head)
+    model.model.audio_feature_head = copy.deepcopy(new_head)
 
     config.vocab_size+=1
     model.config.vocab_size+=1

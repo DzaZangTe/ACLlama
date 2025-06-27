@@ -561,10 +561,10 @@ def train():
         model.print_trainable_parameters()
 
         # #######-load stage1 model
-        pretrained_model_path = "/data/s50042884/my_code/ACLlama_zhang/ACLlama_output/ACLlama_encoder_stage1/checkpoint-4110"
-        need_combined_weights = torch.load(pretrained_model_path + "/base_model.bin", map_location=f"cuda")
-        # model.load_state_dict(need_combined_weights, strict=True)
-        model.load_state_dict(need_combined_weights, strict=False)
+        # pretrained_model_path = "/data/s50042884/my_code/ACLlama_zhang/ACLlama_output/ACLlama_encoder_stage1/checkpoint-4110"
+        # need_combined_weights = torch.load(pretrained_model_path + "/base_model.bin", map_location=f"cuda")
+        # # model.load_state_dict(need_combined_weights, strict=True)
+        # model.load_state_dict(need_combined_weights, strict=False)
         
         # """
         # load contrastive encoder model

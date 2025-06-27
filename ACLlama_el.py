@@ -316,47 +316,47 @@ class ACLlamaForCausalLM(LlamaForCausalLM):
             else:
                 loss_asr=0
                 
-            # loss = loss_asr
+            loss = loss_asr
                 
-            # Shift so that tokens < n predict n
-            shift_logits = logits[..., :-1, :].contiguous()
-            shift_labels = labels[..., 1:].contiguous()
+            # # Shift so that tokens < n predict n
+            # shift_logits = logits[..., :-1, :].contiguous()
+            # shift_labels = labels[..., 1:].contiguous()
 
-            if len(outputs["label_shift"]) >0:
-                if outputs["label_extend"] != -1:
-                    new_shift_labels = torch.full(size=(shift_labels.shape[0], outputs["label_extend"]+shift_labels.shape[1]), fill_value=IGNORE_TOKEN_ID, dtype=torch.long).to(shift_labels.device)
-                    for i in range(len(outputs["label_shift"])):
-                        #extend=torch.full(size=(outputs["label_extend"][i],), fill_value=IGNORE_TOKEN_ID, dtype=torch.long).to(shift_labels[i].device)
-                        #shift_labels[i] = torch.cat((shift, shift_labels[i], extend), dim=0)
-                        #print(new_shift_labels[i].shape,outputs["label_shift"][i],len(shift_labels[i]))
-                        new_shift_labels[i][outputs["label_shift"][i]:outputs["label_shift"][i] + len(shift_labels[i])]= shift_labels[i]
-                    shift_labels = new_shift_labels
-                else:
-                    for i in range(len(outputs["label_shift"])):
-                        shift_labels[i]= shift_labels[i].roll(-outputs["label_shift"][i])
+            # if len(outputs["label_shift"]) >0:
+            #     if outputs["label_extend"] != -1:
+            #         new_shift_labels = torch.full(size=(shift_labels.shape[0], outputs["label_extend"]+shift_labels.shape[1]), fill_value=IGNORE_TOKEN_ID, dtype=torch.long).to(shift_labels.device)
+            #         for i in range(len(outputs["label_shift"])):
+            #             #extend=torch.full(size=(outputs["label_extend"][i],), fill_value=IGNORE_TOKEN_ID, dtype=torch.long).to(shift_labels[i].device)
+            #             #shift_labels[i] = torch.cat((shift, shift_labels[i], extend), dim=0)
+            #             #print(new_shift_labels[i].shape,outputs["label_shift"][i],len(shift_labels[i]))
+            #             new_shift_labels[i][outputs["label_shift"][i]:outputs["label_shift"][i] + len(shift_labels[i])]= shift_labels[i]
+            #         shift_labels = new_shift_labels
+            #     else:
+            #         for i in range(len(outputs["label_shift"])):
+            #             shift_labels[i]= shift_labels[i].roll(-outputs["label_shift"][i])
 
-            loss_fct = CrossEntropyLoss()
-            # Flatten the tokens
-            shift_logits = shift_logits.view(-1, self.config.vocab_size)
-            shift_labels = shift_labels.view(-1)
+            # loss_fct = CrossEntropyLoss()
+            # # Flatten the tokens
+            # shift_logits = shift_logits.view(-1, self.config.vocab_size)
+            # shift_labels = shift_labels.view(-1)
                     
-            #value, index = shift_logits.topk(k=1, dim=-1)
-            #index = index.view(-1)
-            #mask = (shift_labels != -100)
-            #gold_label = torch.masked_select(shift_labels, mask)
-            #index_label = torch.masked_select(index, mask)
-            #print(gold_label.shape, gold_label[:50])
-            #print(index_label.shape, index_label[:50])
+            # #value, index = shift_logits.topk(k=1, dim=-1)
+            # #index = index.view(-1)
+            # #mask = (shift_labels != -100)
+            # #gold_label = torch.masked_select(shift_labels, mask)
+            # #index_label = torch.masked_select(index, mask)
+            # #print(gold_label.shape, gold_label[:50])
+            # #print(index_label.shape, index_label[:50])
 
-            # Enable model/pipeline parallelism
-            shift_labels = shift_labels.to(shift_logits.device)
-            loss = loss_fct(shift_logits, shift_labels)
-            loss = loss + 0.3 * loss_asr 
+            # # Enable model/pipeline parallelism
+            # shift_labels = shift_labels.to(shift_logits.device)
+            # loss = loss_fct(shift_logits, shift_labels)
+            # loss = loss + 0.3 * loss_asr 
 
-        # return CausalLMOutputWithPast(
-        #    loss=loss,
-        #    logits=outputs["audio_features"],
-        # )
+        return CausalLMOutputWithPast(
+           loss=loss,
+           logits=outputs["audio_features"],
+        )
 
         if not return_dict:
             output = (logits,) + outputs[1:]
